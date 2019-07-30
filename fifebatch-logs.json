@@ -1,96 +1,369 @@
 {
-    "template" : "fifebatch-logs-*",
-        "settings" : {
-            "index.refresh_interval" : "60s"
-        },
-        "mappings" : {
-            "_default_" : {
-                "_all" : {"enabled" : true, "omit_norms" : true},
-                "dynamic_templates" : [ {
-                    "message_field" : {
-                        "match" : "message",
-                        "match_mapping_type" : "string",
-                        "mapping" : {
-                            "type" : "string", "index" : "analyzed", "omit_norms" : true
-                        }
-                    }
-                }, {
-                    "string_fields" : {
-                        "mapping" : {
-                            "index" : "not_analyzed",
-                            "type" : "string"
-                        },
-                        "match_mapping_type" : "string",
-                        "match" : "*"
-                    }
-                }, {
-                    "float_fields" : {
-                        "mapping" : {
-                            "type" : "float",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "float",
-                        "match" : "*"
-                    }
-                }, {
-                    "double_fields" : {
-                        "mapping" : {
-                            "type" : "double",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "double",
-                        "match" : "*"
-                    }
-                }, {
-                    "byte_fields" : {
-                        "mapping" : {
-                            "type" : "byte",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "byte",
-                        "match" : "*"
-                    }
-                }, {
-                    "short_fields" : {
-                        "mapping" : {
-                            "type" : "short",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "short",
-                        "match" : "*"
-                    }
-                }, {
-                    "integer_fields" : {
-                        "mapping" : {
-                            "type" : "integer",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "integer",
-                        "match" : "*"
-                    }
-                }, {
-                    "long_fields" : {
-                        "mapping" : {
-                            "type" : "long",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "long",
-                        "match" : "*"
-                    }
-                }, {
-                    "date_fields" : {
-                        "mapping" : {
-                            "type" : "date",
-                            "doc_values" : true
-                        },
-                        "match_mapping_type" : "date",
-                        "match" : "*"
-                    }
-                }
-                ],
-                "properties" : {
-                    "@version": { "type": "string", "index": "not_analyzed" }
-                }
+    "index_patterns" : "fifebatch-events-*",                                                                           
+    "settings" : {
+        "index.refresh_interval" : "60s",
+        "number_of_shards" :   1,
+        "number_of_replicas" : 1
+    }, 
+    "mappings" : {
+      "condor_eventlog": {
+        "dynamic_templates" : [
+          {
+            "message_field" : {
+              "match" : "message",
+              "match_mapping_type" : "string",
+              "mapping" : {
+                "index" : "analyzed",
+                "omit_norms" : true,
+                "type" : "text"
+              }
             }
-        }
-}
+          },
+          {
+            "string_fields" : {
+              "match" : "*",
+              "match_mapping_type" : "string",
+              "mapping" : {
+                "type" : "keyword",
+                "ignore_above": 16000
+              }
+            }
+          },
+          {
+            "double_fields" : {
+              "match" : "*",
+              "match_mapping_type" : "double",
+              "mapping" : {
+                "doc_values" : true,
+                "type" : "double"
+              }
+            }
+          },
+          {
+            "long_fields" : {
+              "match" : "*",
+              "match_mapping_type" : "long",
+              "mapping" : {
+                "doc_values" : true,
+                "type" : "long"
+              }
+            }
+          },
+          {
+            "date_fields" : {
+              "match" : "*",
+              "match_mapping_type" : "date",
+              "mapping" : {
+                "doc_values" : true,
+                "type" : "date"
+              }
+            }
+          }
+        ],
+        "properties" : {
+          "@timestamp" : {
+            "type" : "date"
+          },
+          "@version" : {
+            "type" : "keyword"
+          },
+          "Checkpointed" : {
+            "type" : "keyword"
+          },
+          "Cluster" : {
+            "type" : "keyword"
+          },
+          "CriticalError" : {
+            "type" : "keyword"
+          },
+          "DAGManJobId" : {
+            "type" : "keyword"
+          },
+          "Daemon" : {
+            "type" : "keyword"
+          },
+          "DisconnectReason" : {
+            "type" : "keyword"
+          },
+          "ErrorMsg" : {
+            "type" : "text"
+          },
+          "EventDescription" : {
+            "type" : "keyword"
+          },
+          "EventTime" : {
+            "type" : "date"
+          },
+          "EventTypeNumber" : {
+            "type" : "keyword"
+          },
+          "ExecuteHost" : {
+            "type" : "keyword"
+          },
+          "HoldReason" : {
+            "type" : "keyword"
+          },
+          "HoldReasonCode" : {
+            "type" : "keyword"
+          },
+          "HoldReasonSubCode" : {
+            "type" : "keyword"
+          },
+          "Jobsub_Group" : {
+            "type" : "keyword"
+          },
+          "LogNotes" : {
+            "type" : "keyword"
+          },
+          "MachineAttrGLIDEIN_Entry_Name0" : {
+            "type" : "keyword"
+          },
+          "MachineAttrGLIDEIN_ResourceName0" : {
+            "type" : "keyword"
+          },
+          "MachineAttrGLIDEIN_Site0" : {
+            "type" : "keyword"
+          },
+          "MemoryUsage" : {
+            "type" : "long"
+          },
+          "Message" : {
+            "type" : "keyword"
+          },
+          "MyType" : {
+            "type" : "keyword"
+          },
+          "Owner" : {
+            "type" : "keyword"
+          },
+          "POMS_CAMPAIGN_ID" : {
+            "type" : "keyword"
+          },
+          "POMS_TASK_ID" : {
+            "type" : "keyword"
+          },
+          "Proc" : {
+            "type" : "keyword"
+          },
+          "Reason" : {
+            "type" : "keyword"
+          },
+          "ReceivedBytes" : {
+            "type" : "double"
+          },
+          "ResidentSetSize" : {
+            "type" : "long"
+          },
+          "ReturnValue" : {
+            "type" : "keyword"
+          },
+          "RunLocalUsage" : {
+            "type" : "keyword"
+          },
+          "RunRemoteUsage" : {
+            "type" : "keyword"
+          },
+          "SentBytes" : {
+            "type" : "double"
+          },
+          "Size" : {
+            "type" : "long"
+          },
+          "StartdAddr" : {
+            "type" : "keyword"
+          },
+          "StartdName" : {
+            "type" : "keyword"
+          },
+          "StarterAddr" : {
+            "type" : "keyword"
+          },
+          "SubmitHost" : {
+            "type" : "keyword"
+          },
+          "Subproc" : {
+            "type" : "keyword"
+          },
+          "TerminatedAndRequeued" : {
+            "type" : "keyword"
+          },
+          "TerminatedBySignal" : {
+            "type" : "keyword"
+          },
+          "TerminatedNormally" : {
+            "type" : "keyword"
+          },
+          "TotalLocalUsage" : {
+            "type" : "keyword"
+          },
+          "TotalReceivedBytes" : {
+            "type" : "double"
+          },
+          "TotalRemoteUsage" : {
+            "type" : "keyword"
+          },
+          "TotalSentBytes" : {
+            "type" : "double"
+          },
+          "TriggerEventTypeName" : {
+            "type" : "keyword"
+          },
+          "TriggerEventTypeNumber" : {
+            "type" : "keyword"
+          },
+          "beat" : {
+            "properties" : {
+              "hostname" : {
+                "type" : "keyword"
+              },
+              "name" : {
+                "type" : "keyword"
+              },
+              "version" : {
+                "type" : "keyword"
+              }
+            }
+          },
+          "cluster" : {
+            "type" : "long"
+          },
+          "condor_timestamp" : {
+            "type" : "keyword"
+          },
+          "cpu_allocated" : {
+            "type" : "long"
+          },
+          "cpu_request" : {
+            "type" : "long"
+          },
+          "disk_allocated_kb" : {
+            "type" : "long"
+          },
+          "disk_request_kb" : {
+            "type" : "long"
+          },
+          "disk_usage_kb" : {
+            "type" : "long"
+          },
+          "event" : {
+            "type" : "keyword"
+          },
+          "event_code" : {
+            "type" : "keyword"
+          },
+          "event_message" : {
+            "type" : "keyword"
+          },
+          "execute_host" : {
+            "type" : "keyword"
+          },
+          "hold_code" : {
+            "type" : "keyword"
+          },
+          "hold_message" : {
+            "type" : "keyword"
+          },
+          "hold_subcode" : {
+            "type" : "keyword"
+          },
+          "host" : {
+            "type" : "keyword"
+          },
+          "input_type" : {
+            "type" : "keyword"
+          },
+          "jobid" : {
+            "type" : "keyword"
+          },
+          "memory_allocated_mb" : {
+            "type" : "long"
+          },
+          "memory_request_mb" : {
+            "type" : "long"
+          },
+          "memory_usage_mb" : {
+            "type" : "long"
+          },
+          "message" : {
+            "type" : "text",
+            "norms" : false
+          },
+          "offset" : {
+            "type" : "long"
+          },
+          "path" : {
+            "type" : "keyword"
+          },
+          "pool" : {
+            "type" : "keyword"
+          },
+          "process" : {
+            "type" : "long"
+          },
+          "resident_set_size_kb" : {
+            "type" : "long"
+          },
+          "return_value" : {
+            "type" : "keyword"
+          },
+          "run_bytes_received" : {
+            "type" : "long"
+          },
+          "run_bytes_sent" : {
+            "type" : "long"
+          },
+          "run_local_sys_time" : {
+            "type" : "long"
+          },
+          "run_local_user_time" : {
+            "type" : "long"
+          },
+          "run_remote_sys_time" : {
+            "type" : "long"
+          },
+          "run_remote_user_time" : {
+            "type" : "long"
+          },
+          "source" : {
+            "type" : "keyword"
+          },
+          "subprocess" : {
+            "type" : "long"
+          },
+          "tags" : {
+            "type" : "keyword"
+          },
+          "termination_code" : {
+            "type" : "keyword"
+          },
+          "termination_message" : {
+            "type" : "keyword"
+          },
+          "total_bytes_received" : {
+            "type" : "long"
+          },
+          "total_bytes_sent" : {
+            "type" : "long"
+          },
+          "total_local_sys_time" : {
+            "type" : "long"
+          },
+          "total_local_user_time" : {
+            "type" : "long"
+          },
+          "total_remote_sys_time" : {
+            "type" : "long"
+          },
+          "total_remote_user_time" : {
+            "type" : "long"
+          },
+          "type" : {
+            "type" : "keyword"
+          },
+          "update_id" : {
+            "type" : "keyword"
+          }
+      }
+     }
+    }
+  }
